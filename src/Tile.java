@@ -47,6 +47,22 @@ public abstract class Tile {
         }
     }
 
+    public static class RoomTile extends Tile {
+        private String suspectName;
+        private int x;
+        private int y;
+
+        public RoomTile(int x, int y) {
+            this.x = x;
+            this.y = y;
+        }
+
+        @Override
+        public void display() {
+
+        }
+    }
+
     public static class StartTile extends Tile {
         private String suspectName;
         private int x;

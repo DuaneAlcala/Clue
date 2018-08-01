@@ -1,3 +1,8 @@
+import javax.imageio.ImageIO;
+import java.awt.*;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 import java.util.List;
 
 public class Board {
@@ -6,32 +11,52 @@ public class Board {
     private List<Room> rooms;
     private Suspect currentPlayer;
     private Tile[][] tiles;
-    private int boardWidth = 22;
-    private int boardHeight = 22;
+    private int width = 24;
+    private int height = 25;
 
     public Board() {
-        setTiles();
+
     }
 
-    private void setTiles() {
-
-
-        /*
-        for(int i = 0; i < boardWidth; i++) {
-            for(int j = 0; j < boardHeight; j++) {
-                tiles[i][j] = new Tile.MoveTile(i ,j);
-            }
+    public boolean loadBoard(File board) {
+        BufferedImage boardImage = null;
+        try {
+            boardImage = ImageIO.read(board);
+        }catch (IOException e) {
+            e.printStackTrace();
         }
 
-        // Setting up the tiles of the rooms, if the player tries to move to that tile, they are not allowed
-        for(Room room : rooms) {
-            for(int i = room.getTileX(); i < room.getTileWidth() + 1; i++) {
-                for(int j = room.getTileY(); j < room.getTileHeight() + 1; j++) {
-                    tiles[i][j] = new Tile.BlankTile(i, j);
-                }
+        if(boardImage == null) {
+            return false;
+        }
+
+        // Getting pixels and then loading board
+        tiles = new Tile[width][height];
+        for(int x = 0; x < width; x++) {
+            for(int y = 0; y < height; y++) {
+                Color color = new Color(boardImage.getRGB(x, y));
+                Tile tile = getTile(color, x, y);
+                tiles[x][y] = tile;
             }
         }
-        */
+        return true;
+    }
+
+    private Tile getTile(Color color, int x, int y) {
+        Color normalTile = new Color(255, 216, 0); // normal tile
+        Color roomTile = new Color(0, 148, 255);
+        Color unplayableTile = new Color(255, 127, 127);
+
+        if(color.equals(normalTile)) {
+            return new Tile.MoveTile(x, y);
+        }
+        if(color.equals(roomTile)) {
+            return new Tile.RoomTile(x, y);
+        }
+        if(color.equals(unplayableTile)) {
+            return new Tile.BlankTile(x, y);
+        }
+        return null;
     }
 
     public void displayTiles() {

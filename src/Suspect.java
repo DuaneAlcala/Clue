@@ -104,11 +104,13 @@ public class Suspect {
 
         boolean provenFalse = false;
         for(Suspect suspect : gameInstance.getSuspects()) {
+           if(!suspect.getName().equals(this.name)) {
 
+           }
         }
     }
 
-    public List<String> getAssumptions(Scanner sc, Game gameInstance) {
+    private List<String> getAssumptions(Scanner sc, Game gameInstance) {
         String suspectAccusation = "";
         String weaponAccusation = "";
         String roomAccusation = "";
@@ -164,6 +166,7 @@ public class Suspect {
         accuseResult = folder.verifyAccusation(suspectAccusation, weaponAccusation, roomAccusation);
 
         if(!accuseResult) {
+
             playing = false;
         }
     }
@@ -178,10 +181,6 @@ public class Suspect {
 
     public String getName() {
         return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
     }
 
     public List<Card> getCards() {
