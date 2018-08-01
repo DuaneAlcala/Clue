@@ -6,6 +6,10 @@ public class Weapon {
         this.name = name;
     }
 
+    public String getName() {
+        return name;
+    }
+
     public void setRoom(Room room) {
         this.room = room;
     }

@@ -27,6 +27,10 @@ public class Room {
         this.weapons = new ArrayList<>();
     }
 
+    public String getName() {
+        return name;
+    }
+
     // For constructing the board
     public int getTileX() {
         return tileX;

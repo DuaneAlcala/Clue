@@ -26,6 +26,27 @@ public class Game {
         play();
     }
 
+    // This shit should be in some utilities package
+    // probably remove this shit
+    public static enum Direction {
+        NORTH, SOUTH, EAST, WEST;
+
+        public static boolean checkDirection(String direction) {
+            return (direction.toUpperCase().equals("N") ||
+                    direction.toUpperCase().equals("S") ||
+                    direction.toUpperCase().equals("E") ||
+                    direction.toUpperCase().equals("W"));
+        }
+
+        public static Direction getDirection(String direction) {
+            if(direction.toUpperCase().equals("N")) return NORTH;
+            if(direction.toUpperCase().equals("S")) return SOUTH;
+            if(direction.toUpperCase().equals("E")) return EAST;
+            if(direction.toUpperCase().equals("W")) return WEST;
+            return null;
+        }
+    }
+
     private void setup() {
         System.out.println("Welcome to Cluedo");
 
@@ -89,7 +110,12 @@ public class Game {
     private void play() {
         while(gameGoing) {
             currentPlayer = suspects.get(numTurns % numPlayers);
-            currentPlayer.doTurn(board);
+            if(!currentPlayer.isPlaying()) {
+
+            }else {
+
+            }
+            currentPlayer.doTurn(board, sc, this);
 
             // Checking if the current player got an accusation right and won
             if(currentPlayer.getHasAccused()) {
@@ -121,7 +147,23 @@ public class Game {
         System.out.println("Thanks for playing Cluedo!");
     }
 
+    public List<Suspect> getSuspects() {
+        return suspects;
+    }
+
+    public List<Weapon> getWeapons() {
+        return weapons;
+    }
+
+    public List<Room> getRooms() {
+        return rooms;
+    }
+
     public static void main(String[] args) {
         new Game();
+    }
+
+    public ConfidentialFolder getFolder() {
+        return folder;
     }
 }

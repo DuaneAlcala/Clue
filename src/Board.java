@@ -14,6 +14,9 @@ public class Board {
     }
 
     private void setTiles() {
+
+
+        /*
         for(int i = 0; i < boardWidth; i++) {
             for(int j = 0; j < boardHeight; j++) {
                 tiles[i][j] = new Tile.MoveTile(i ,j);
@@ -28,6 +31,7 @@ public class Board {
                 }
             }
         }
+        */
     }
 
     public void displayTiles() {
@@ -38,7 +42,7 @@ public class Board {
         }
     }
 
-    public void moveSuspect() {
+    public void moveSuspect(int numMoves, Game.Direction direction) {
 
     }
 }
