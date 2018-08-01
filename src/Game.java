@@ -71,11 +71,7 @@ public class Game {
     }
 
     public void boardPrep() {
-        // Make the tiles
 
-        // Make the rooms
-        // Might not need private fields for the rooms, suspects and folder, might just create them here and
-        // then pass them all into board
         List<String> roomNames = new ArrayList<>(Arrays.asList("Cellar", "Kitchen", "Ballroom", "Conservatory", "Dining Room", "Library", "Lounge", "Hall", "Study"));
         //List<String> weaponNames = new ArrayList<>(Arrays.asList("Candlestick", ""))
 
