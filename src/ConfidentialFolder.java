@@ -1,17 +1,17 @@
 public class ConfidentialFolder {
-    private Card.SuspectCard suspect;
-    private Card.WeaponCard weapon;
-    private Card.RoomCard room;
+    private Card suspect;
+    private Card weapon;
+    private Card room;
 
-    public ConfidentialFolder(Card.SuspectCard suspect, Card.WeaponCard weapon, Card.RoomCard room) {
+    public ConfidentialFolder(Card suspect, Card weapon, Card room) {
         this.suspect = suspect;
         this.weapon = weapon;
         this.room = room;
     }
 
-    public boolean verifyAccusation(Card.SuspectCard suspect, Card.WeaponCard weapon, Card.RoomCard room) {
-        return (this.suspect.getSuspectName().equals(suspect.getSuspectName()) &&
-                this.weapon.getWeaponName().equals(weapon.getWeaponName()) &&
-                this.room.getRoomName().equals(room.getRoomName()));
+    public boolean verifyAccusation(String suspect, String weapon, String room) {
+        return (this.suspect.getCardName().equals(suspect) &&
+                this.weapon.getCardName().equals(weapon) &&
+                this.room.getCardName().equals(room));
     }
 }

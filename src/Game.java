@@ -5,7 +5,6 @@ public class Game {
     private List<Suspect> suspects;
     private ConfidentialFolder folder;
     private List<Weapon> weapons;
-    private boolean playerHasWon = false;
     private Board board;
     private Suspect currentPlayer;
 
@@ -13,19 +12,21 @@ public class Game {
 
     private int numTurns = 0;
     private int numPlayers = 0;
-    private boolean gameGoing;
+    private boolean gameGoing = true;
+    private boolean playerHasWon = false;
 
     public Game() {
         sc = new Scanner(System.in);
+        suspects = new ArrayList<>();
+        weapons = new ArrayList<>();
+        rooms = new ArrayList<>();
         board = new Board();
-        boardPrep();
-        gameGoing = true;
-        //setup();
+
+        setup();
         play();
     }
 
-
-    private void play() {
+    private void setup() {
         System.out.println("Welcome to Cluedo");
 
         numPlayers = Input.readInt(sc, "Please select the number of player to play with (3-6)");
@@ -36,6 +37,56 @@ public class Game {
         System.out.println();
         System.out.println("Setting up the board and handing out cards...");
 
+        List<String> suspectNames = new ArrayList<>(Arrays.asList("Mrs. White", "Mr. Green", "Mrs. Peacock", "Prof. Plum", "Miss Scarlett", "Col. Mustard"));
+        List<String> weaponNames = new ArrayList<>(Arrays.asList("Candlestick", "Dagger", "Lead Pipe", "Revolver", "Rope", "Spanner"));
+        List<String> roomNames = new ArrayList<>(Arrays.asList("Kitchen", "Ballroom", "Conservatory", "Billiard Room", "Library", "Study", "Hall", "Lounge", "Dining Room"));
+
+        List<Card> suspectCards = new ArrayList<>();
+        List<Card> weaponCards = new ArrayList<>();
+        List<Card> roomCards = new ArrayList<>();
+
+        for(int i = 0; i < numPlayers; i++) {
+            suspects.add(new Suspect(suspectNames.get(i)));
+        }
+
+        // wtf happens if there are less than 6 do you still give all the cards
+        for(String suspectName : suspectNames) {
+            suspectCards.add(new Card(suspectName));
+        }
+
+        for(String weaponName : weaponNames) {
+            weapons.add(new Weapon(weaponName));
+            weaponCards.add(new Card(weaponName));
+        }
+
+        for(String roomName : roomNames) {
+            rooms.add(new Room(roomName));
+            roomCards.add(new Card(roomName));
+        }
+
+        Collections.shuffle(suspectCards);
+        Collections.shuffle(weaponCards);
+        Collections.shuffle(roomCards);
+
+        folder = new ConfidentialFolder(suspectCards.remove(0), weaponCards.remove(0), roomCards.remove(0));
+
+        List<Card> allCards = new ArrayList<>();
+        allCards.addAll(suspectCards);
+        allCards.addAll(weaponCards);
+        allCards.addAll(roomCards);
+
+        Collections.shuffle(allCards);
+
+
+        // Giving cards to players
+        int i = 0;
+        while(allCards.size() > 0) {
+            suspects.get(i % numPlayers).addCard(allCards.remove(0));
+            i++;
+        }
+    }
+
+    private void play() {
         while(gameGoing) {
             currentPlayer = suspects.get(numTurns % numPlayers);
             currentPlayer.doTurn(board);
@@ -70,53 +121,7 @@ public class Game {
         System.out.println("Thanks for playing Cluedo!");
     }
 
-    public void boardPrep() {
-
-        List<String> roomNames = new ArrayList<>(Arrays.asList("Cellar", "Kitchen", "Ballroom", "Conservatory", "Dining Room", "Library", "Lounge", "Hall", "Study"));
-        //List<String> weaponNames = new ArrayList<>(Arrays.asList("Candlestick", ""))
-
-        for(String roomName : roomNames) {
-            rooms.add(new Room(roomName));
-        }
-
-
-        // Make the weapons
-        weapons.add(new Weapon("Candlestick"));
-        weapons.add(new Weapon("Knife"));
-        weapons.add(new Weapon("Lead Pipe"));
-        weapons.add(new Weapon("Revolver"));
-        weapons.add(new Weapon("Rope"));
-        weapons.add(new Weapon("Wrench"));
-
-        // Make the suspects
-        suspects.add(new Suspect("Miss Scarlet"));
-        suspects.add(new Suspect("Professor Plum"));
-        suspects.add(new Suspect("Mrs. Peacock"));
-        suspects.add(new Suspect("Mr. Green"));
-        suspects.add(new Suspect("Colonel Mustard"));
-        suspects.add(new Suspect("Mrs. White"));
-
-        // Assign everything to the tiles
-    }
-
-    private void setup(List<Suspect> suspects, List<Room> rooms, List<Weapon> weapons) {
-        // Shuffle
-        List<Suspect> suspectsCopy = suspects;
-        List<Room> roomsCopy = rooms;
-        List<Weapon> weaponsCopy = weapons;
-
-        Collections.shuffle(suspectsCopy);
-        Collections.shuffle(roomsCopy);
-        Collections.shuffle(weaponsCopy);
-
-        Suspect murderer = suspectsCopy.remove(0);
-        Room usedRoom = roomsCopy.remove(0);
-        Weapon usedWeapon = weaponsCopy.remove(0);
-        //ConfidentialFolder folder = new ConfidentialFolder(murderer, usedWeapon, usedRoom);
-
-    }
-
     public static void main(String[] args) {
-        Game game = new Game();
+        new Game();
     }
 }

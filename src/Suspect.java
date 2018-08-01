@@ -74,6 +74,10 @@ public class Suspect {
         hasAccused = true;
     }
 
+    public void addCard(Card card) {
+        cards.add(card);
+    }
+
     public String getName() {
         return name;
     }
