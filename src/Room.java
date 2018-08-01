@@ -9,6 +9,8 @@ public class Room {
     private int tileY;
     private int tileWidth;
     private int tileHeight;
+    private boolean isCornerRoom;
+    private Room secretPassageRoom;
 
     public Room(String name) {
         this.name = name;

@@ -1,8 +1,4 @@
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-import java.util.stream.Collectors;
+import java.util.*;
 
 public class Game {
     private List<Room> rooms;
@@ -13,25 +9,65 @@ public class Game {
     private Board board;
     private Suspect currentPlayer;
 
+    private Scanner sc;
+
+    private int numTurns = 0;
+    private int numPlayers = 0;
+    private boolean gameGoing;
+
     public Game() {
+        sc = new Scanner(System.in);
         board = new Board();
         boardPrep();
+        gameGoing = true;
         //setup();
         play();
     }
 
 
     private void play() {
-        while(!playerHasWon) {
-            // Go through players clock wise
+        System.out.println("Welcome to Cluedo");
 
-            int dice = (int) (Math.random()*12) + 1;
-            // Present choices to players
-            System.out.println("You rolled + " );
-            board.moveSuspect();
-
-
+        numPlayers = Input.readInt(sc, "Please select the number of player to play with (3-6)");
+        while(numPlayers < 3 || numPlayers > 6) {
+            System.out.println("Select a proper amount of players");
+            numPlayers = Input.readInt(sc, "Please select the number of players to play with (3-6)");
         }
+        System.out.println();
+        System.out.println("Setting up the board and handing out cards...");
+
+        while(gameGoing) {
+            currentPlayer = suspects.get(numTurns % numPlayers);
+            currentPlayer.doTurn(board);
+
+            // Checking if the current player got an accusation right and won
+            if(currentPlayer.getHasAccused()) {
+                if(currentPlayer.getAccuseResult()) {
+                    gameGoing = false;
+                    playerHasWon = true;
+                }else if(!currentPlayer.getAccuseResult()) {
+                    currentPlayer.setPlaying(false);
+                }
+            }
+
+            // Checking if everyone has failed their accusations and no one else can play
+            boolean allWrongAccused = true;
+            for(Suspect suspect : suspects) {
+                if(!suspect.getAccuseResult()) allWrongAccused = false;
+            }
+            if(allWrongAccused) {
+                gameGoing = false;
+            }
+
+            numTurns++;
+        }
+
+        if(playerHasWon) {
+            System.out.println(currentPlayer.getName() + " solved the murder and won!");
+        }else {
+            System.out.println("No one could solve the murder. Everyone handed the wrong accusations.");
+        }
+        System.out.println("Thanks for playing Cluedo!");
     }
 
     public void boardPrep() {
@@ -41,7 +77,7 @@ public class Game {
         // Might not need private fields for the rooms, suspects and folder, might just create them here and
         // then pass them all into board
         List<String> roomNames = new ArrayList<>(Arrays.asList("Cellar", "Kitchen", "Ballroom", "Conservatory", "Dining Room", "Library", "Lounge", "Hall", "Study"));
-        List<String> weaponNames = new ArrayList<>(Arrays.asList("Candlestick", ""))
+        //List<String> weaponNames = new ArrayList<>(Arrays.asList("Candlestick", ""))
 
         for(String roomName : roomNames) {
             rooms.add(new Room(roomName));
@@ -81,7 +117,6 @@ public class Game {
         Room usedRoom = roomsCopy.remove(0);
         Weapon usedWeapon = weaponsCopy.remove(0);
         //ConfidentialFolder folder = new ConfidentialFolder(murderer, usedWeapon, usedRoom);
-
 
     }
 
